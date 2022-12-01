@@ -284,7 +284,7 @@ function parseTopDownInstructions(data: any): string {
     "\n# Stages\n" +
     Array.from(stageOf.values())
       .map((stage) => stage.toMarkdown())
-      .join("\n---\n")
+      .join("\n")
   );
 }
 
