@@ -1,0 +1,38 @@
+image: node:lts
+
+stages:
+- clone-frontend
+- build
+- deploy
+
+variables:
+  FRONTEND_PATH: "frontend"
+
+clone_frontend:
+  # https://stackoverflow.com/questions/63693061/how-to-run-a-script-from-file-in-another-project-using-include-in-gitlab-ci
+  stage: clone-frontend
+  script:
+    - git clone -b main --depth 1
+      "https://READ_STATIC_FRONTEND:${READ_STATIC_FRONTEND}@gitlab.com/flag4jobs/frontend/static-frontend.git" "${FRONTEND_PATH}"
+  artifacts:
+    paths:
+      - "${FRONTEND_PATH}"
+
+build:
+  stage: build
+  environment: production
+  script:
+    - cd "${FRONTEND_PATH}"
+    - yarn
+    - yarn build
+  artifacts:
+    paths:
+      - "${FRONTEND_PATH}/apps/manager/out/"
+
+pages:
+  stage: deploy
+  script:
+    - mv "${FRONTEND_PATH}/apps/manager/out/" public/
+  artifacts:
+    paths:
+      - public/

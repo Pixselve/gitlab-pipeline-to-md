@@ -1,0 +1,39 @@
+image: python:3.10-buster
+
+stages:
+  - lint
+  - ansible
+
+lint:
+  stage: lint
+  before_script:
+    - export PATH="$PATH:~/.local/bin"
+    - python3 -m pip install ansible-lint
+  script:
+    - ansible-lint -p main.yml roles/base/tasks/
+  allow_failure: true
+
+ansible:
+  stage: ansible
+  variables:
+    ENVIRONMENT: "prod"
+    DOMAIN_API: "api.flag4jobs.com"
+    ANSIBLE_HOST_KEY_CHECKING: "False"
+    ANSIBLE_FORCE_COLOR: "True"
+  before_script:
+    - export PATH="$PATH:~/.local/bin"
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - mkdir -p ~/.ssh
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$API_BACKEND_SSH_PRIVATE_KEY")
+    - python3 -m pip install --user ansible
+    - ansible --version
+    - ansible-galaxy collection install community.general
+  script:
+    - ansible-playbook main.yml -i "inventories/$ENVIRONMENT"
+      --extra-vars "API_BACKEND_DEPLOY_TOKEN=$API_BACKEND_DEPLOY_TOKEN_USERNAME:$API_BACKEND_DEPLOY_TOKEN_PASSWORD"
+      --extra-vars "ENV_FILE=$ENV_FILE DOMAIN_API=$DOMAIN_API"
+      --extra-vars "FULLCHAIN_FILE=$FULLCHAIN_FILE PRIVKEY_FILE=$PRIVKEY_FILE"
+  only:
+    - web
+  when: manual

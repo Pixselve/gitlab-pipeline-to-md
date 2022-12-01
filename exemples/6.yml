@@ -1,0 +1,26 @@
+stages:
+- sast
+- pages
+
+# SAST (Code & dependency check)
+sast:
+  stage: sast
+include:
+- template: Security/SAST.gitlab-ci.yml
+
+# Build website
+pages:
+  stage: pages
+  image: node:lts
+  before_script:
+    - npm install
+  script:
+    - npm run build
+    - rm -r public/
+    - cp -r build/ public/
+    - echo $CI_PAGES_URL
+  artifacts:
+    paths:
+      - public/
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "main"

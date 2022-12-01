@@ -1,0 +1,19 @@
+stages:
+- deploy_app
+- deploy_ctf
+
+deploy_app:
+  stage: deploy_app
+  trigger:
+    project: flag4jobs/deploy/app-pages
+    branch: main
+  only:
+    - main
+
+deploy_ctf:
+  stage: deploy_ctf
+  trigger:
+    project: flag4jobs/deploy/ctf-pages
+    branch: main
+  only:
+    - main
