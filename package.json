@@ -7,7 +7,8 @@
     "start": "node ./out/index.js"
   },
   "dependencies": {
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "yaml": "^2.1.3"
   },
   "devDependencies": {
     "prettier": "^2.8.0",
