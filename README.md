@@ -373,5 +373,3 @@ echo "Run another script if $IS_A_FEATURE exists"
 
 </details>
 
-
-</details>
