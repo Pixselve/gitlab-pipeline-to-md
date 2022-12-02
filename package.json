@@ -2,7 +2,7 @@
   "name": "gitlab-pipeline-to-md",
   "version": "1.0.0",
   "scripts": {
-    "start:dev": "ts-node src/index.ts -i .\\exemples\\codespell.yml -o .\\exemples\\codespell.md",
+    "start:dev": "ts-node src/index.ts -i .\\exemples\\6.yml -o .\\exemples\\6.md",
     "build": "tsc",
     "start": "node ./out/index.js"
   },

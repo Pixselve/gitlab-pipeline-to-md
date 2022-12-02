@@ -98,6 +98,12 @@ ${ new Rules("rules", workflow.rules) }`;
     result += getIncludeTable(include);
     result += "\n";
   }
+  // global properties
+  if (global) {
+    result += "## 🌍 Default properties\n";
+    result += global.markdown;
+    result += "\n";
+  }
   // workflow variables
   if (variables) {
     result += "## 📑 Variables\n";

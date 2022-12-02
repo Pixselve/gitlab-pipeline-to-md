@@ -5,6 +5,7 @@ import { JobConfig } from "./jobConfig";
 import { getRetryBadge, retrySchema } from "./retry";
 import { cacheSchema, getCacheList } from "./cache";
 import { getScriptAsAnArray } from "./scripts";
+import { getImageBadge, imageSchema } from "./image";
 
 export class DefaultConfig extends JobConfig {
   defaultConfig: z.infer<typeof globalSchema>;
@@ -15,9 +16,9 @@ export class DefaultConfig extends JobConfig {
   }
 
   get markdown(): string {
-    let result = "# Global configuration\n";
+    let result = "";
     if (this.defaultConfig.image) {
-      result += `![${this.defaultConfig.image}](https://img.shields.io/badge/image-${this.defaultConfig.image}-brightgreen) `;
+      result += getImageBadge(this.defaultConfig.image) + " ";
     }
     if (this.defaultConfig.interruptible) {
       result += `![Interruptible](https://img.shields.io/badge/-Interruptible-red) `;
@@ -72,7 +73,7 @@ export const globalSchema = z.object({
   before_script: z.union([z.string(), z.array(z.string())]).optional(),
   artifacts: ArtifactSchema.optional(),
   cache: cacheSchema.optional(),
-  image: z.string().optional(),
+  image: imageSchema.optional(),
   interruptible: z.boolean().optional(),
   services: z
     .object({
