@@ -1,0 +1,5 @@
+job:
+  coverage: '/Code coverage: \d+\.\d+/'
+  dast_configuration:
+    site_profile: "Example Co"
+    scanner_profile: "Quick Passive Test"

@@ -2,11 +2,56 @@ stages:
 - sast
 - pages
 
+workflow:
+  name: 'Pipeline for branch: $CI_COMMIT_BRANCH'
+
+variables:
+  DEPLOY_SITE: "https://example.com/"
+  DEPLOY_ENVIRONMENT:
+    description: "The deployment target. Change this variable to 'canary' or 'production' if needed."
+    value: "staging"
+
 # SAST (Code & dependency check)
 sast:
   stage: sast
 include:
-- template: Security/SAST.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
+  - project: 'my-group/my-project'
+    file: '/templates/.gitlab-ci-template.yml'
+  - project: 'my-group/my-subgroup/my-project-2'
+    file:
+      - '/templates/.builds.yml'
+      - '/templates/.tests.yml'
+  - remote: 'https://gitlab.com/example-project/-/raw/main/.gitlab-ci.yml'
+default:
+  image: ruby:3.0
+  timeout: 3 hours 30 minutes
+  interruptible: true
+  before_script:
+    - npm install
+  retry:
+    max: 2
+    when: runner_system_failure
+  artifacts:
+    paths:
+      - public/
+      - public/
+    exclude:
+      - binaries/**/*.o
+    expire_in: 1 week
+    expose_as: 'artifact 1'
+    name: "job1-artifacts-file"
+    public: false
+    reports:
+      awd: rspec.xml
+      awdawd: rspec.xml
+    untracked: true
+    when: on_failure
+  cache:
+    key: binaries-cache
+    paths:
+      - binaries/*.apk
+      - .config
 
 # Build website
 pages:
@@ -22,5 +67,68 @@ pages:
   artifacts:
     paths:
       - public/
+      - public/
+    exclude:
+      - binaries/**/*.o
+    expire_in: 1 week
+    expose_as: 'artifact 1'
+    name: "job1-artifacts-file"
+    public: false
+    reports:
+      awd: rspec.xml
+      awdawd: rspec.xml
+    untracked: true
+    when: on_failure
   rules:
     - if: $CI_COMMIT_REF_NAME == "main"
+    - if: $CI_COMMIT_REF_NAME == "main"
+  environment:
+    name: production
+    kubernetes:
+      namespace: production
+      deployment: website
+      service: website
+  needs:
+    - project: namespace/group/project-name
+      job: build-1
+      ref: main
+      artifacts: true
+    - project: namespace/group/project-name-2
+      job: build-2
+      ref: main
+      artifacts: true
+
+docker build:
+  script: docker build -t my-image:$CI_COMMIT_REF_SLUG .
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        paths:
+          - Dockerfile
+          - Dockerfile
+        compare_to: 'refs/heads/branch1'
+
+
+job:
+  variables:
+    DEPLOY_VARIABLE: "default-deploy"
+  coverage: '/Code coverage: \d+\.\d+/'
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+      when: manual
+      changes:
+        - Dockerfile
+      variables:                              # Override DEPLOY_VARIABLE defined
+        DEPLOY_VARIABLE: "deploy-production"  # at the job level.
+    - if: $CI_COMMIT_REF_NAME =~ /feature/
+      when: never
+      variables:
+        IS_A_FEATURE: "true"                  # Define a new variable.
+      changes:
+        paths:
+          - Dockerfile
+    - exists:
+        - Dockerfile
+  script:
+    - echo "Run script with $DEPLOY_VARIABLE as an argument"
+    - echo "Run another script if $IS_A_FEATURE exists"
