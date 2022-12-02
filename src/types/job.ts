@@ -5,11 +5,12 @@ import Artifacts from "./artifacts";
 import { CacheClass } from "./cache";
 import { Rules } from "./rules";
 import { getScriptAsAnArray, scriptSchema } from "./scripts";
+import { getImageBadge, Image, imageSchema } from "./image";
 
 export class Job {
   name: string;
   stage: string = "test";
-  image: string | null = null;
+  image: Image | null = null;
   beforeScripts: null | string[] = null;
 
   scripts: null | string[] = null;
@@ -61,7 +62,7 @@ export class Job {
           job.settings.push(new JobConfig(jobKeyword, data[jobKeyword]));
           break;
         case JobKeywords.IMAGE:
-          job.image = data[jobKeyword];
+          job.image = imageSchema.parse(data[jobKeyword]);
           break;
         case JobKeywords.INHERIT:
           job.settings.push(new JobConfig(jobKeyword, data[jobKeyword]));
@@ -170,7 +171,7 @@ ${ this.settings.map((value) => value.markdown).join("\n") }
 
   imageToMarkdown(): string {
     if (this.image) {
-      return `![${ this.image }](https://img.shields.io/badge/image-${ this.image }-brightgreen)`;
+      return getImageBadge(this.image);
     }
     return "";
   }
