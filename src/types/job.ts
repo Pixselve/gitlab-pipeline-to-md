@@ -6,6 +6,7 @@ import { CacheClass } from "./cache";
 import { Rules } from "./rules";
 import { getScriptAsAnArray, scriptSchema } from "./scripts";
 import { getImageBadge, Image, imageSchema } from "./image";
+import { getVariablesTable, Variables, variablesSchema } from "./variables";
 
 export class Job {
   name: string;
@@ -18,6 +19,7 @@ export class Job {
   afterScripts: null | string[] = null;
   settings: JobConfig[] = [];
   retry: Retry | null = null;
+  variables: Variables | null = null;
 
   constructor(name: string) {
     this.name = name;
@@ -116,7 +118,7 @@ export class Job {
           job.settings.push(new JobConfig(jobKeyword, data[jobKeyword]));
           break;
         case JobKeywords.VARIABLES:
-          job.settings.push(new JobConfig(jobKeyword, data[jobKeyword]));
+          job.variables = variablesSchema.parse(data[jobKeyword]);
           break;
         case JobKeywords.WHEN:
           job.settings.push(new JobConfig(jobKeyword, data[jobKeyword]));
@@ -137,6 +139,7 @@ ${ this.imageToMarkdown() }
 ${ this.beforeScriptsToMarkdown() }
 ${ this.scriptsToMarkdown() }
 ${ this.afterScriptsToMarkdown() }
+${ this.variablesToMarkdown() }
 ${ this.settings.map((value) => value.markdown).join("\n") }
 </details>
 `;
@@ -157,6 +160,16 @@ ${ this.settings.map((value) => value.markdown).join("\n") }
         "#### Before Scripts\n```bash\n" +
         this.beforeScripts.join("\n") +
         "\n```"
+      );
+    }
+    return "";
+  }
+
+  variablesToMarkdown(): string {
+    if (this.variables) {
+      return (
+        `#### Variables\n
+        ${getVariablesTable(this.variables)}`
       );
     }
     return "";

@@ -40,12 +40,16 @@ fi
 codespell -c ${DICTIONARY_OPTION} ${IGNORE_FILES_OPTION}
 ```
 
+#### Variables
 
-#### variables
-  * CODESPELL_DIRECTORY: `.`
-* CODESPELL_DICTIONARY: `dictionary.txt`
-* CODESPELL_IGNORE_FILES: ``
-* CODESPELL_VERSION: `2.2.1`
-* IMAGE_TAG: `3.10-alpine3.16`
+        
+| Name | Value | Description |
+|------|-------|-------------|
+| `CODESPELL_DIRECTORY` | `.` |  |
+| `CODESPELL_DICTIONARY` | `dictionary.txt` |  |
+| `CODESPELL_IGNORE_FILES` | `` |  |
+| `CODESPELL_VERSION` | `2.2.1` |  |
+| `IMAGE_TAG` | `3.10-alpine3.16` |  |
+
 
 </details>
