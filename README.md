@@ -193,6 +193,28 @@ job:
 | ![Project](https://img.shields.io/badge/-project-green) | my-group/my-subgroup/my-project-2 |
 | ![Remote](https://img.shields.io/badge/-remote-green) | https://gitlab.com/example-project/-/raw/main/.gitlab-ci.yml |
 
+## 🌍 Default properties
+![Image](https://img.shields.io/badge/Image-ruby:3.0-blue)  ![Interruptible](https://img.shields.io/badge/-Interruptible-red) ![Timeout](https://img.shields.io/badge/Timeout-3_hours_30_minutes-orange) ![Retry](https://img.shields.io/badge/Retry-2-blue)
+## Artifacts
+![Untracked](https://img.shields.io/badge/-Untracked-orange) ![on_failure](https://img.shields.io/badge/-on__failure-red)
+
+**✅ Paths:** `public/`, `public/`
+
+**❌ Exclude:** `binaries/**/*.o`
+
+**⌚ Expire in:** `1 week`
+
+**📊 Reports:** awd: `rspec.xml`, awdawd: `rspec.xml`
+
+## Cache
+| Key | Paths | Untracked | Policy | When |
+| --- | --- | --- | --- | --- |
+| ![Cache key](https://img.shields.io/badge/Cache_key-binaries--cache-blue) | `binaries/*.apk`, `.config` | ❌ | ![Cache policy](https://img.shields.io/badge/Cache_policy-pull--push-blue) | ![on_success](https://img.shields.io/badge/-on__success-green) |
+## Before scripts
+```bash
+npm install
+```
+
 ## 📑 Variables
 
 | Name | Value | Description |
@@ -228,6 +250,7 @@ pages_STAGE --> test_STAGE
 
 
 
+
 </details>
 
 ## ⚙️ pages
@@ -235,7 +258,7 @@ pages_STAGE --> test_STAGE
 <details>
 <summary><h3>pages</h3></summary>
 
-![node:lts](https://img.shields.io/badge/image-node:lts-brightgreen)
+![Image](https://img.shields.io/badge/Image-node:lts-blue)
 #### Before Scripts
 ```bash
 npm install
@@ -247,6 +270,7 @@ rm -r public/
 cp -r build/ public/
 echo $CI_PAGES_URL
 ```
+
 
 #### Artifacts
 ![Untracked](https://img.shields.io/badge/-Untracked-orange) ![on_failure](https://img.shields.io/badge/-on__failure-red)
@@ -272,9 +296,9 @@ echo $CI_PAGES_URL
 #### environment
 * name: `production`
 * kubernetes:
-    * namespace: `production`
-    * deployment: `website`
-    * service: `website`
+  * namespace: `production`
+  * deployment: `website`
+  * service: `website`
 
 
 
@@ -305,6 +329,7 @@ docker build -t my-image:$CI_COMMIT_REF_SLUG .
 ```
 
 
+
 #### Rules
 
 | When | Condition | Allow failure | Variables | Changes | Exists |
@@ -325,9 +350,12 @@ echo "Run script with $DEPLOY_VARIABLE as an argument"
 echo "Run another script if $IS_A_FEATURE exists"
 ```
 
+#### Variables
 
-#### variables
-* DEPLOY_VARIABLE: `default-deploy`
+
+| Name | Value | Description |
+|------|-------|-------------|
+| `DEPLOY_VARIABLE` | `default-deploy` |  |
 
 
 #### coverage
@@ -340,6 +368,8 @@ echo "Run another script if $IS_A_FEATURE exists"
 | ![manual](https://img.shields.io/badge/-manual-purple) | `$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH` | ❌ | DEPLOY_VARIABLE: deploy-production | Dockerfile |  |
 | ![never](https://img.shields.io/badge/-never-red) | `$CI_COMMIT_REF_NAME =~ /feature/` | ❌ | IS_A_FEATURE: true | Dockerfile |  |
 | ![on_success](https://img.shields.io/badge/-on__success-green) | `-` | ❌ |  |  | Dockerfile |
+
+</details>
 
 </details>
 
