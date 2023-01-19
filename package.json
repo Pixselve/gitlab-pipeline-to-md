@@ -1,13 +1,13 @@
 {
   "name": "gitlab-pipeline-to-md",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Converts GitLab pipeline YAML to Markdown",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "repository": "git@github.com:Pixselve/gitlab-pipeline-to-md.git",
   "license": "MIT",
   "scripts": {
-    "start:dev": "ts-node src/index.ts -i ./exemples/codespell.yml -o ./exemples/codespell.md",
+    "start:dev": "ts-node src/index.ts -i ./exemples/6.yml -o ./exemples/6.md",
     "build": "tsc",
     "start": "node ./lib/index.js -i ./exemples/codespell.yml -o ./exemples/codespell.md"
   },

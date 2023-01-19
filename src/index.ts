@@ -16,7 +16,8 @@ export type Recursion = Record<
     string | string[] | RecordInterface | RecordInterface[]
 >;
 
-export interface RecordInterface extends Record<string, Recursion> {}
+export interface RecordInterface extends Record<string, Recursion> {
+}
 
 export class Stage {
   name: string;
@@ -66,7 +67,7 @@ function parseTopDownInstructions(data: any): string {
         break;
       default:
         // Job
-        const job = Job.fromYaml(topLevelKeyword, data[topLevelKeyword]);
+        const job = new Job(topLevelKeyword, data[topLevelKeyword]);
         const stage = stageOf.get(job.stage);
         if (!stage) {
           stageOf.set(job.stage, new Stage(job.stage));
@@ -77,47 +78,48 @@ function parseTopDownInstructions(data: any): string {
   }
   const stages = Array.from(stageOf.values());
 
-  let result = "";
+  let result: string[] = [];
+
   // workflow name
   if (workflow?.name) {
-    result += `# ${workflow.name}`;
+    result.push(`# ${workflow.name}`);
   } else {
-    result += "# Workflow";
+    result.push("# Workflow");
   }
-  result += "\n";
+
   // workflow rules
   if (workflow?.rules) {
-    result += `## Rules
-${new Rules("rules", workflow.rules)}`;
-    result += "\n";
+    result.push("## Rules");
+    result.push(new Rules("rules", workflow.rules).markdown);
   }
+
   // workflow include
   if (include) {
-    result += "## 📥 Includes\n";
-    result += getIncludeTable(include);
-    result += "\n";
+    result.push("## 📥 Includes");
+    result.push(getIncludeTable(include));
   }
+
   // global properties
   if (global) {
-    result += "## 🌍 Default properties\n";
-    result += global.markdown;
-    result += "\n";
+    result.push("## 🌍 Default properties");
+    result.push(global.markdown);
   }
+
   // workflow variables
   if (variables) {
-    result += "## 📑 Variables\n";
-    result += getVariablesTable(variables);
-    result += "\n";
+    result.push("## 📑 Variables");
+    result.push(getVariablesTable(variables));
   }
-  // mermaid
-  result += "## 📊 Workflow overview\n";
-  result += getMermaid(stages);
-  result += "\n";
-  // workflow stages
-  result += "## 📃 Stages\n";
-  result += stages.map((stage) => stage.toMarkdown()).join("\n");
 
-  return result;
+  // mermaid
+  result.push("## 📊 Workflow overview");
+  result.push(...getMermaid(stages));
+
+  // workflow stages
+  result.push("## 📃 Stages");
+  result.push(...stages.map((stage) => stage.toMarkdown()));
+
+  return result.join("\n");
 }
 
 function parseFile(inputPath: string, outputPath: string) {
@@ -134,7 +136,6 @@ function parseFile(inputPath: string, outputPath: string) {
 
 const test = program
     .name("Gitlab CI documentation generator")
-    .version("0.0.1")
     .requiredOption("-i, --input <file>", "input file")
     .requiredOption("-o, --output <file>", "output file")
     .parse(process.argv);
