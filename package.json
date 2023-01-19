@@ -11,6 +11,9 @@
     "build": "tsc",
     "start": "node ./lib/index.js -i ./exemples/codespell.yml -o ./exemples/codespell.md"
   },
+  "bin": {
+    "gitlab-pipeline-to-md": "./lib/index.js"
+  },
   "files": [
     "lib/**/*"
   ],

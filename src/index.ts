@@ -1,23 +1,19 @@
+#! /usr/bin/env node
 import * as yaml from "js-yaml";
 import * as fs from "fs";
-import { TopLevelKeywords } from "./types/topLevelKeywords";
-import { JobConfig } from "./types/jobConfig";
-import { DefaultConfig } from "./types/defaultConfig";
-import { program } from "commander";
-import { getMermaid } from "./utils/mermaid";
-import { Job } from "./types/job";
-import { getIncludeTable, Include, includeSchema } from "./types/include";
-import { Workflow, workflowSchema } from "./types/workflow";
-import { Rules } from "./types/rules";
-import {
-  getVariablesTable,
-  Variables,
-  variablesSchema,
-} from "./types/variables";
+import {TopLevelKeywords} from "./types/topLevelKeywords";
+import {DefaultConfig} from "./types/defaultConfig";
+import {program} from "commander";
+import {getMermaid} from "./utils/mermaid";
+import {Job} from "./types/job";
+import {getIncludeTable, Include, includeSchema} from "./types/include";
+import {Workflow, workflowSchema} from "./types/workflow";
+import {Rules} from "./types/rules";
+import {getVariablesTable, Variables, variablesSchema,} from "./types/variables";
 
 export type Recursion = Record<
-  string,
-  string | string[] | RecordInterface | RecordInterface[]
+    string,
+    string | string[] | RecordInterface | RecordInterface[]
 >;
 
 export interface RecordInterface extends Record<string, Recursion> {}
@@ -34,8 +30,8 @@ export class Stage {
   toMermaid() {
     return `subgraph ${this.name.replaceAll(" ", "_")}_STAGE[${this.name}]
 ${this.jobs
-  .map((job) => `${job.name.replaceAll(" ", "_")}[${job.name}]`)
-  .join("\n")}
+        .map((job) => `${job.name.replaceAll(" ", "_")}[${job.name}]`)
+        .join("\n")}
 end`;
   }
 
@@ -137,11 +133,11 @@ function parseFile(inputPath: string, outputPath: string) {
 }
 
 const test = program
-  .name("Gitlab CI documentation generator")
-  .version("0.0.1")
-  .requiredOption("-i, --input <file>", "input file")
-  .requiredOption("-o, --output <file>", "output file")
-  .parse(process.argv);
+    .name("Gitlab CI documentation generator")
+    .version("0.0.1")
+    .requiredOption("-i, --input <file>", "input file")
+    .requiredOption("-o, --output <file>", "output file")
+    .parse(process.argv);
 
 const input = test.getOptionValue("input");
 const output = test.getOptionValue("output");
