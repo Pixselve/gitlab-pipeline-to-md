@@ -1,7 +1,7 @@
 # Workflow
 ## 📊 Workflow overview
 ```mermaid
-flowchart LR
+graph LR
 subgraph tests_STAGE[tests]
 codespell[codespell]
 end
