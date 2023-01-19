@@ -9,9 +9,7 @@ This is a simple script to generate a documentation for your Gitlab CI
 You must have node installed on your computer.
 
 ```bash
-npm install
-npm run build
-npm run start -i <input file> -o <output file>
+npx gitlab-pipeline-to-md -i <input file> -o <output file>
 ```
 
 ## Input file
