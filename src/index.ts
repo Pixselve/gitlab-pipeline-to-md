@@ -9,14 +9,18 @@ import { Job } from "./types/job";
 import { getIncludeTable, Include, includeSchema } from "./types/include";
 import { Workflow, workflowSchema } from "./types/workflow";
 import { Rules } from "./types/rules";
-import { getVariablesTable, Variables, variablesSchema } from "./types/variables";
+import {
+  getVariablesTable,
+  Variables,
+  variablesSchema,
+} from "./types/variables";
 
-export type Recursion = Record<string,
-  string | string[] | RecordInterface | RecordInterface[]>;
+export type Recursion = Record<
+  string,
+  string | string[] | RecordInterface | RecordInterface[]
+>;
 
-export interface RecordInterface extends Record<string, Recursion> {
-}
-
+export interface RecordInterface extends Record<string, Recursion> {}
 
 export class Stage {
   name: string;
@@ -28,24 +32,24 @@ export class Stage {
   }
 
   toMermaid() {
-    return `subgraph ${ this.name.replaceAll(" ", "_") }_STAGE[${ this.name }]
-${ this.jobs
-      .map((job) => `${ job.name.replaceAll(" ", "_") }[${ job.name }]`)
-      .join("\n") }
+    return `subgraph ${this.name.replaceAll(" ", "_")}_STAGE[${this.name}]
+${this.jobs
+  .map((job) => `${job.name.replaceAll(" ", "_")}[${job.name}]`)
+  .join("\n")}
 end`;
   }
 
   toMarkdown() {
-    return `## ⚙️ ${ this.name }
-${ this.jobs.map((job) => job.toMarkdown()).join("\n") }`;
+    return `## ⚙️ ${this.name}
+${this.jobs.map((job) => job.toMarkdown()).join("\n")}`;
   }
 }
 
 function parseTopDownInstructions(data: any): string {
-  let global: DefaultConfig;
-  let include: Include;
-  let workflow: Workflow;
-  let variables: Variables;
+  let global: DefaultConfig | null = null;
+  let include: Include | null = null;
+  let workflow: Workflow | null = null;
+  let variables: Variables | null = null;
 
   let stageOf = new Map<string, Stage>();
   for (const topLevelKeyword in data) {
@@ -71,17 +75,16 @@ function parseTopDownInstructions(data: any): string {
         if (!stage) {
           stageOf.set(job.stage, new Stage(job.stage));
         }
-        stageOf.get(job.stage).jobs.push(job);
+        stageOf.get(job.stage)?.jobs.push(job);
         break;
     }
   }
   const stages = Array.from(stageOf.values());
 
-
   let result = "";
   // workflow name
   if (workflow?.name) {
-    result += `# ${ workflow.name }`;
+    result += `# ${workflow.name}`;
   } else {
     result += "# Workflow";
   }
@@ -89,7 +92,7 @@ function parseTopDownInstructions(data: any): string {
   // workflow rules
   if (workflow?.rules) {
     result += `## Rules
-${ new Rules("rules", workflow.rules) }`;
+${new Rules("rules", workflow.rules)}`;
     result += "\n";
   }
   // workflow include

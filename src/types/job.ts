@@ -25,7 +25,7 @@ export class Job {
     this.name = name;
   }
 
-  static fromYaml(name, data: any): Job {
+  static fromYaml(name: string, data: any): Job {
     let job = new Job(name);
 
     for (const jobKeyword in data) {

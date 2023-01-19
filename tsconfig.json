@@ -1,12 +1,16 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "ESNext",
+    "target": "es2021",
     "sourceMap": true,
     "rootDir": "src",
-    "outDir": "out"
+    "outDir": "./lib",
+    "declaration": true,
+    "strict": true,
+    "esModuleInterop": true
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "lib"
   ]
 }

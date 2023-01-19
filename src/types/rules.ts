@@ -34,6 +34,7 @@ ${this.rules
 }
 
 function changesToMd(rule: Rule[0]["changes"]) {
+    if (!rule) return "-";
   if (Array.isArray(rule)) {
     return rule.join(" • ");
   } else {
